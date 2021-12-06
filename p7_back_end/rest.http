@@ -1,0 +1,14 @@
+GET http://localhost:3000/api/users
+
+
+### 
+
+POST http://localhost:3000/api/register
+Content-Type: application/json 
+
+{
+    "firstName": "Theo",
+    "lastName": "Trouillet",
+    "email": "justtesting@outlook.fr",
+    "password": "blablablabla"
+}

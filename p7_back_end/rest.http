@@ -1,9 +1,17 @@
 GET http://localhost:3000/api/users
 
 
+
+### 
+GET http://localhost:3000/api/users/4
+
+
+
 ### 
 
-POST http://localhost:3000/api/register
+
+
+POST http://localhost:3000/auth
 Content-Type: application/json 
 
 {
@@ -12,3 +20,10 @@ Content-Type: application/json
     "email": "justtesting@outlook.fr",
     "password": "blablablabla"
 }
+
+
+
+###
+
+DELETE http://localhost:3000/api/users/3
+

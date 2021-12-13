@@ -32,11 +32,10 @@ export default {
 }
 
 body{
-  background-color: #1C1C1E;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 10px;
+  align-items: center;
+  background-color: #333333;
 }
 
 .login {

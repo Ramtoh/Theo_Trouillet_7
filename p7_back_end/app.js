@@ -1,11 +1,8 @@
 const express = require('express');
-const path = require('path');
-const cors = require('cors');
-const { request } = require('http');
-const fs = require('fs');
-const createError = require('http-errors');
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
+const cors = require('cors');
+const multer = require('multer');
 const app = express();
 
 app.use(cors())
@@ -19,22 +16,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', async (req, res, next) => {
-  res.send({ message: 'Awesome it works 🐻' });
-});
+const route = require('./routes/api.route');
+app.use('/', route);
 
-app.use('/api', require('./routes/api.route'));
-
-app.use((req, res, next) => {
-  next(createError.NotFound());
-});
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.send({
-    status: err.status || 500,
-    message: err.message,
-  });
-});
 
 module.exports = app;

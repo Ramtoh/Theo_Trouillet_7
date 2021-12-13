@@ -1,26 +1,20 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const auth = require('./auth');
+const createError = require('http-errors');
 
-const prisma = new PrismaClient()
-
-router.get('/users', async (req, res, next) => {
-    try {
-        const users = await prisma.users.findMany({})
-        res.json(users)
-    } catch {
-        next(error)
-    }
+router.get('/', (req, res) => {
+    res.send('hello world');
 });
 
-router.post('/register', async (req, res, next) => {
-    try {
-        const createUser = await prisma.users.create({
-            data: req.body,
-        })
-        res.json(createUser)
-    } catch (error) {
-        next(error)
-    }
-});
+router.use('/auth', auth);
 
+router.use( async (req, res, next) => {
+    next(createError.NotFound('Route not found'))
+})
+router.use( (err, req, res, next) => {
+    res.status(err.status || 500).json({
+        status: false,
+        message: err.message
+    })
+})
 module.exports = router;

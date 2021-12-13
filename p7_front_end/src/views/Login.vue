@@ -7,60 +7,87 @@
         <div class="login">
             <h2 class="login_title" v-if="mode == 'login'">Connexion</h2>
             <h2 class="login_title" v-else>Inscription</h2>
-            <form action="auth" method="POST">
-                <div class="form_el" v-if="mode == 'create'">
-                    <input type="text" class="form_el_input" placeholder="Prénom" required>
-                    <input type="text" class="form_el_input" placeholder="Nom" required>
-                </div>
 
-                <div class="form_el">
-                    <input type="text" class="form_el_input" placeholder="Adresse e-mail" required>
-                </div>
+            <div class="form_el" v-if="mode == 'login'">
+                <p>Vous n'êtes pas encore inscrit ? 
+                    <a class="register_link" @click="moveToRegister()">S'inscrire ici</a>
+                </p>
+            </div>
+            <div class="form_el" v-else>
+                <p>Vous avez déjà un compte ? 
+                    <a class="login_link" @click="moveToLogin()">Se connecter</a>
+                </p>
+            </div>
 
-                <div class="form_el">
-                    <input type="password" class="form_el_input" placeholder="Mot de passe" required>
-                </div>
+            <div class="form_el" v-if="mode == 'create'">
+                <input type="text" class="form_el_input" v-model="firstName" placeholder="Prénom" required>
+                <input type="text" class="form_el_input" v-model="lastName" placeholder="Nom" required>
+            </div>
 
-                <div class="form_el" v-if="mode =='login'">
-                    <button type="submit" class="form_el_input form_button">Se connecter</button>
-                </div>
+            <div class="form_el">
+                <input type="text" class="form_el_input" v-model="email" placeholder="Adresse e-mail" required>
+            </div>
 
-                <div class="form_el" v-else>
-                    <button type="submit" class="form_el_input form_button">S'inscrire</button>
-                </div>
+            <div class="form_el">
+                <input type="password" class="form_el_input" v-model="password" placeholder="Mot de passe" required>
+            </div>
 
-                <div class="form_el" v-if="mode == 'login'">
-                    <p>Vous n'êtes pas encore inscrit ? 
-                        <a class="register_link" @click="createAccount()">S'inscrire ici</a>
-                    </p>
-                </div>
-
-                <div class="form_el" v-else>
-                    <p>Vous avez déjà un compte ? 
-                        <a class="login_link" @click="moveToLogin()">Se connecter</a>
-                    </p>
-                </div>
-            </form>
+            <div class="form_el">
+                <button @click="login()" class="button form_el_input" v-if="mode == 'login'">
+                    <span v-if="status == 'loading'">Connexion en cours..</span>
+                    <span v-else>Connexion</span>
+                </button>
+                <button @click="createAccount()" class="button form_el_input" v-else>
+                    <span v-if="status == 'loading'">Création du compte..</span>
+                    <span v-else>Créer mon compte</span>
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-
 export default {
     name: 'Login',
     data: function () {
         return {
             mode: 'login',
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
         }
     },
     methods: {
-        createAccount: function() {
+        moveToRegister: function() {
             this.mode = 'create';
         },
         moveToLogin: function() {
             this.mode = 'login';
-        }
+        },
+        login: function() {
+            this.$store.dispatch('login', {
+                email: this.email,
+                password: this.password,
+            }).then(function (response) {
+                console.log(response);
+            }, function (error) {
+                console.log(error);
+            })
+        },
+        createAccount: function() {
+            this.$store.dispatch('createAccount', {
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                password: this.password,
+            }).then(function (response) {
+                console.log(response);
+                alert('Votre compte a été correctement créé !');
+            }, function (error) {
+                console.log(error);
+            })
+        },
     }
 };
 

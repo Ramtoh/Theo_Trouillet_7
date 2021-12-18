@@ -156,8 +156,8 @@ export default {
     }
 
     .register_link:hover, .login_link:hover{
-        cursor: pointer; 
-        color: #333333;
+        color: #284F8F;
+        cursor: pointer;
     }
 
     button {
@@ -166,7 +166,8 @@ export default {
     }
 
     button:hover{
-        background-color: #333333 !important;
+        background-color: #284F8F !important;
+        cursor: pointer;
     }
 
     @media screen and (max-width: 560px) {

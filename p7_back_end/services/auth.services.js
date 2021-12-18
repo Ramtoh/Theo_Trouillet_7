@@ -5,12 +5,13 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
 const jwt = require('../utils/jwt');
+const { fs } = require('fs');
 
 class AuthService {
     static async register(data) {
         const { email } = data;
-        data.password = bcrypt.hashSync(data.password, 8);
-        let users = prisma.users.create({
+        data.password = await bcrypt.hashSync(data.password, 8);
+        let users = await prisma.users.create({
             data
         })
         data.accessToken = await jwt.signAccessToken(users);

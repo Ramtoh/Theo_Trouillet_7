@@ -1,21 +1,18 @@
 const createError = require('http-errors')
-const jwt = require('../utils/jwt')
-const auth = async (req, res, next) => {
-    if(!req.headers.authorization) {
-        return next(createError.Unauthorized(`Un token d'accès est requis`))
+const jwt = require('jsonwebtoken')
+const auth = (req, res, next) => { 
+try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const userId = decodedToken.userId;
+    if (req.body.userId && req.body.userId !== userId) {
+        throw 'ID Utilisateur non valable!';
+    } else {
+        next();
     }
-    
-    const token = req.headers.authorization.split(' ')[1]
-    if (!token) {
-        return next(createError.Unauthorized())
-    }
-
-    await jwt.verifyAccessToken(token).then(user => {
-        req.user = user
-        next()
-    }).catch(e => {
-        next(createError.Unauthorized(e.message))
-    })
+} catch (error) {
+    res.status(401).json({ error: error | 'Requete non authentifiée'});
+}
 }
 
 module.exports = auth;

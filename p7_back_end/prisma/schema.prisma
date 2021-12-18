@@ -12,7 +12,7 @@ model users {
   firstName String   @db.VarChar(255)
   lastName  String   @db.VarChar(255)
   email     String   @unique(map: "email") @db.VarChar(255)
-  password  String   @db.VarChar(255)
+  password  String   @db.VarChar(255)  
   createdAt DateTime @default(now())
   post      post[]
 }

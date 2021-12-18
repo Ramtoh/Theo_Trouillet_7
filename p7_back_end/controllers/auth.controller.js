@@ -1,5 +1,6 @@
 const auth = require('../services/auth.services');
 const createError = require('http-errors');
+const { prisma } = require('@prisma/client');
 
 class authController {
     static register = async (req, res, next) => {
@@ -37,6 +38,14 @@ class authController {
                 message: 'Tous les utilisateurs',
                 data: users
             })
+        } catch(e) {
+            next(createError(e.statusCode, e.message))
+        }
+    }
+
+    static modify = async (req, res, next) => {
+        try{
+            
         } catch(e) {
             next(createError(e.statusCode, e.message))
         }

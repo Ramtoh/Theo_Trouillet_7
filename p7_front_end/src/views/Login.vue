@@ -69,11 +69,13 @@ export default {
             this.$store.dispatch('login', {
                 email: this.email,
                 password: this.password,
-            }).then(function (response) {
-                console.log(response);
-            }, function (error) {
-                console.log(error);
             })
+            .then(response => {
+                console.log(response.data);
+            }),
+            function(error) {
+                console.log(error);
+            }; 
         },
         createAccount: function() {
             this.$store.dispatch('createAccount', {

@@ -81,7 +81,8 @@ export default {
             this.$router.push({ path: '/publish' });
         },
         disconnect() {
-            // 
+            localStorage.clear();
+            document. location. href="http://localhost:8080"
         },
     }
 }

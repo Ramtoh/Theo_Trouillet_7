@@ -3,15 +3,13 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 router.post('/', async (req, res) => {
-    const { title, content } = req.body
-    const result = await prisma.post.create({
+    const { liked } = req.body
+    const result = await prisma.likes.create({
         data: {
-            title,
-            content,
+            liked,
         },
     })
     res.json(result)
 });
 
 module.exports = router;
-

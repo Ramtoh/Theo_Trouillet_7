@@ -1,12 +1,18 @@
 const router = require('express').Router();
 const auth = require('./auth');
 const createError = require('http-errors');
+const post = require('./posts.route');
+const comments = require('./comments.route');
+const likes = require('./likes.route');
 
 router.get('/', (req, res) => {
     res.send('hello world');
 });
 
 router.use('/auth', auth);
+router.use('/main', post);
+router.use('/main/comments', comments);
+router.use('/main/likes', likes);
 
 router.use( async (req, res, next) => {
     next(createError.NotFound('Route not found'))

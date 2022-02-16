@@ -13,30 +13,49 @@
                     <input type="file">
                 </div>
                 <div class="user_name">
-                    <p class="user_firstname">John</p>
-                    <p class="user_lastname">Doe</p>
+                    <p class="user_firstname">{{ users.firstName }}</p>
+                    <p class="user_lastname">{{ users.lastName }}</p>
                 </div>
 
-                <p class="user_email">example@outlook.fr</p>
+                <p class="user_email">{{ users.email }}</p>
 
                 <div>
                     <button v-if="mode == 'myProfile'" @click="modifyProfile()">Modifier son profil</button>
                     <button v-else @click="myProfile()" type="submit">Valider les modifications</button> <!-- valider les modifications --> 
                 </div>
+                <button v-if="mode =='modifyProfile'" @click="deleteProfile()" type="submit" class="deleteButton">Supprimer le profil</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-
+import axios from "axios";
 export default {
     name: 'myProfile',
     data: function () {
         return {
+            users: [],
             mode: 'myProfile',
         }
     },
+
+    mounted() {
+        axios
+        .get("http://localhost:3000/auth", {
+            headers: {
+                Authorization: "Bearer " + this.users.accessToken
+            }
+        })
+
+        .then(res => {
+            console.log(`Message de l'API :`, res);
+            this.users = res.data
+        })
+
+        .catch(err => console.log(err));
+    },
+
     methods: {
         myProfile: function () {
             this.mode = 'myProfile';
@@ -46,9 +65,25 @@ export default {
         },
         returnHome() {
             this.$router.push({ path: '/groupomania' });
+        },
+        deleteProfile() {
+            if (
+                window.confirm("Souhaitez vous vraiment supprimer votre compte?")
+            )
+            axios
+                .delete("http://localhost:3000/auth", {
+                    headers: {
+                        Authorization: "Bearer " + this.users.accessToken
+                    }
+                })
+
+                .then(() => {
+                    localStorage.clear();
+                    document. location. href="http://localhost:8080";
+                })
         }
     }
-}
+};
 
 </script>
 
@@ -131,5 +166,13 @@ export default {
     button:hover {
         background-color: #284F8F;
         cursor: pointer;
+    }
+
+    .deleteButton {
+        background: #B22B27;
+    }
+
+    .deleteButton:hover {
+        background-color: #C96B68;
     }
 </style>

@@ -42,14 +42,6 @@ class authController {
             next(createError(e.statusCode, e.message))
         }
     }
-
-    static modify = async (req, res, next) => {
-        try{
-            
-        } catch(e) {
-            next(createError(e.statusCode, e.message))
-        }
-    }
 }
 
 module.exports = authController;

@@ -16,11 +16,60 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     name: 'publish',
     data: function () {
         return {
+            post:{
+                title: null,
+                content: null,
+            },
+
+            users: [],
             mode: 'publication',
+        };
+    },
+
+    mounted() {
+        axios
+            .get("http://localhost:3000/auth", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('user')
+                }
+            })
+
+            .then(res => {
+                console.log(`Réponse API`, res);
+                this.users = res.data;
+            })
+
+            .catch(e => console.log(e));
+    },
+
+    methods: {
+        createPublication() {
+            const formData = new FormData();
+            formData.append('title', this.post.title);
+            formData.append('content', this.post.content);
+
+            if (formData.get("title") !== null && formData.get("content") !== null ) {
+                axios
+                    .post("http://localhost:3000/main", formData, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem('user')
+                        }
+                    })
+
+                    .then(res => {
+                        console.log(res);
+                        document. location. href="http://localhost:8080/groupomania";
+                    })
+
+                    .catch(e => console.log(e));
+            } else {
+                console.log("Echec");
+            }
         }
     }
 }

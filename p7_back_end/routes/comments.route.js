@@ -3,10 +3,9 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 router.post('/', async (req, res) => {
-    const { title, content } = req.body
-    const result = await prisma.post.create({
+    const { content } = req.body
+    const result = await prisma.comments.create({
         data: {
-            title,
             content,
         },
     })
@@ -14,4 +13,3 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
-

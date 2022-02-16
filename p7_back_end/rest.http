@@ -15,10 +15,10 @@ POST http://localhost:3000/auth
 Content-Type: application/json 
 
 {
-    "firstName": "Theo",
-    "lastName": "Trouillet",
-    "email": "justtesting@outlook.fr",
-    "password": "blablablabla"
+    "firstName": "Admin",
+    "lastName": "Groupomania",
+    "email": "admin@admin.fr",
+    "password": "adminPassword88"
 }
 
 

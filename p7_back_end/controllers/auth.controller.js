@@ -9,7 +9,7 @@ class authController {
             res.status(200).json({
                 status: true,
                 message: 'Utilisateur créé!',
-                data: users
+                retourDB: users
             })
         }
         catch(e) {
@@ -19,11 +19,11 @@ class authController {
 
     static login = async (req, res, next) => { 
         try {
-            const data = await auth.login(req.body)
+            const retourDB = await auth.login(req.body)
             res.status(200).json({
                 status: true,
                 message: 'Compte connecté avec succès',
-                data
+                retourDB
             })
         } catch (e) {
             next(createError(e.statusCode, e.message))
@@ -36,9 +36,22 @@ class authController {
             res.status(200).json({
                 status: true,
                 message: 'Tous les utilisateurs',
-                data: users
+                retourDB: users
             })
         } catch(e) {
+            next(createError(e.statusCode, e.message))
+        }
+    }
+
+    static me = async (req, res, next) => { 
+        try {
+            const retourDB = await auth.me();
+            res.status(200).json({
+                status: true, 
+                message: 'Cet utilisateur',
+                retourDB
+            })
+        } catch (e) {
             next(createError(e.statusCode, e.message))
         }
     }

@@ -20,7 +20,7 @@ const store = createStore({
         },
         logUser: function (state, user) {
             state.user = user;
-        }
+        },
     },
     actions: {
         login: ({commit}, userInfos) => {
@@ -30,7 +30,6 @@ const store = createStore({
                 .then(function (response) {
                     commit('setStatus', '');
                     commit('logUser', 'response.data');
-                    localStorage.setItem('user', JSON.stringify(userInfos.accessToken));
                     resolve(response);
                 })
                 .catch(function (error) {

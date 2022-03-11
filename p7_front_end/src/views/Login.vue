@@ -71,7 +71,9 @@ export default {
                 password: this.password,
             })
             .then(response => {
-                console.log(response.data);
+                console.log(response.data.retourDB);
+                localStorage.setItem('token', response.data.retourDB.accessToken);
+                this.$router.push('/groupomania');
             }),
             function(error) {
                 console.log(error);
@@ -92,7 +94,6 @@ export default {
         },
     }
 };
-
 </script>
 
 <style scoped>

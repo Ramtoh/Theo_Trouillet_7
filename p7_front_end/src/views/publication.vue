@@ -1,18 +1,16 @@
 <template>
-    <form class="publication">
+    <div class="publication">
         <h1>Ajouter une publication</h1>
-        <div class="publication__content">
-            <input class="publication__el publication__title" type="text" placeholder="Titre" required>
-            <input class="publication__el publication__description" type="text" placeholder="Description" required>
+        <form class="publication__content" method="post" @submit.prevent="createPublication">
+            <input class="publication__el publication__title" type="text" placeholder="Titre" v-model="title" required>
+            <input class="publication__el publication__description" type="text" placeholder="Description" v-model="content" required>
             <div class="publication__img">
                 <p>Ajouter une image</p>
-                <input type="file" required>
+                <input type="file">
             </div>
-            <div>
-                <button class="submit__button">Publier</button>
-            </div>
-        </div>
-    </form>
+                <button type="submit" class="submit__button">Publier</button>
+        </form>
+    </div>
 </template>
 
 <script>
@@ -21,13 +19,8 @@ export default {
     name: 'publish',
     data: function () {
         return {
-            post:{
-                title: null,
-                content: null,
-            },
-
-            users: [],
-            mode: 'publication',
+            title: '',
+            content: '',
         };
     },
 
@@ -35,41 +28,35 @@ export default {
         axios
             .get("http://localhost:3000/auth", {
                 headers: {
-                    Authorization: "Bearer " + localStorage.getItem('user')
+                    Authorization: "Bearer " + localStorage.getItem('token')
                 }
             })
 
-            .then(res => {
-                console.log(`Réponse API`, res);
-                this.users = res.data;
-            })
+            // .then(res => {
+            //     // console.log(`Réponse API`, res);
+            // })
 
             .catch(e => console.log(e));
     },
 
     methods: {
         createPublication() {
-            const formData = new FormData();
-            formData.append('title', this.post.title);
-            formData.append('content', this.post.content);
+            axios
+                .post("http://localhost:3000/main", {
+                    title: this.title,
+                    content: this.content,
 
-            if (formData.get("title") !== null && formData.get("content") !== null ) {
-                axios
-                    .post("http://localhost:3000/main", formData, {
-                        headers: {
-                            Authorization: "Bearer " + localStorage.getItem('user')
-                        }
-                    })
-
-                    .then(res => {
-                        console.log(res);
-                        document. location. href="http://localhost:8080/groupomania";
-                    })
-
-                    .catch(e => console.log(e));
-            } else {
-                console.log("Echec");
-            }
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem('token')
+                    },
+                })
+            .then(res => {
+                console.log(res);
+                this.$router.push('/groupomania');
+            })
+            .catch(err => {
+                console.log(err);
+            })
         }
     }
 }

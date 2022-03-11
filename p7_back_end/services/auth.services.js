@@ -5,7 +5,8 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
 const jwt = require('../utils/jwt');
-const { fs } = require('fs');
+const { fs, read } = require('fs');
+const { nextTick } = require('process');
 
 class AuthService {
     static async register(data) {
@@ -39,6 +40,19 @@ class AuthService {
     static async all() {
         const allUsers = await prisma.users.findMany();
         return allUsers;
+    }
+
+    static async me(req, res, next) {
+        let headerAuth = req.headers["authorization"];
+        console.log(headerAuth);
+        let id = jwt.checkUserId(headerAuth);
+        console.log(id);
+
+        prisma.users.findUnique({
+            where: {
+                user_id: id
+            }
+        })
     }
 }
 

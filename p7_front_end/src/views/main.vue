@@ -26,11 +26,47 @@
         <main>
             <div class="container">
                 <div class="main_container">
-                    <h1>Fil d'actualité</h1>
-
-
+                    <h1>Bienvenue, retrouvez le fil d'actualité :</h1>
                     <div id="publications">
-                        <!-- INJECTION HTML PAR JS -->
+                            <div class="container_post">
+                                <div class="publication__header">
+                                    <div class="publication__author">
+                                        <!-- <img src="" alt="" /> -->
+                                        <p v-for="user in users" :key="user.firstName">{{user.firstName}}</p>
+                                        <p v-for="user in users" :key="user.lastName">{{user.lastName}}</p>
+                                    </div>
+                                </div>
+
+                                <div class="publication__main">
+                                    <div class="publication__mainTitle">
+                                        <h2>{{posts.title}}</h2>
+                                    </div>
+                                    <div class="publication__mainContent">
+                                        <span>
+                                            {{posts.content}}
+                                        </span>
+                                    </div>
+                                    <!-- <div id="comment">
+                                            <textarea type="text" id="comment" v-model="content" placeholder="Ajoutez un commentaire.."></textarea>
+                                            <a v-on:click="createComment()">
+                                                <fa icon="fa-comments" title="Commenter"/>
+                                            </a>
+                                        </div> -->
+                                </div>
+                            </div>
+
+                            <!-- <ul class="showComments">
+                                <li>
+                                    <h3>{{comments.authorId.firstName}}</h3>
+                                     <span>{{content}}</span>
+
+                                    <p v-if="users.user_id==comments.authorId || users.isAdmin">
+                                        <button @click.prevent="deleteComment(comments.comment_id, comments.authorId)" id="delete_button" >
+                                            <fa icon="fa-solid fa-trash-can-slash" />
+                                        </button>
+                                    </p>
+                                </li>
+                            </ul> -->
                     </div>
                 </div>
             </div>
@@ -66,12 +102,44 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
     name: 'groupomania',
     data: function () {
         return {
             mode: 'groupomania',
+            users: [],
+            posts: [],
         }
+    },
+
+    mounted() {
+        axios
+            .get("http://localhost:3000/auth/me", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('token')
+                }
+            })
+
+            .then(res => {
+                console.log(res);
+            })
+            .then(data => { console.log(data) })
+            .catch(err => console.log(err));
+// recupere les differents posts de l'API
+        axios
+            .get("http://localhost:3000/main", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('token')
+                }
+            })
+
+            .then(res => {
+                console.log(res);
+                this.posts = res.data;
+            })
+
+            .catch(err => console.log(err));
     },
     methods: {
         myProfile() {
@@ -86,51 +154,6 @@ export default {
         },
     }
 }
-
-// let containerPublication = document.getElementById("publications");
-
-// const publication = item => {
-//     containerPublication.innerHTML =
-//     `
-//         <div class="publication">
-//             <div class="publication__header">
-//                 <div class="publication__author">
-//                     <img src="" alt="" />
-//                     <p>{users.firstName}</p>
-//                     <p>{user.lastName}</p>
-//                 </div>
-//             </div>
-
-//             <div class="publication__main">
-//                 <div class="publication__mainTitle">
-//                     <h2>Title</h2>
-//                 </div>
-//                 <div class="publication__mainContent">
-//                     <img src="" alt="" />
-//                     <span class="publication__mainDescription">
-//                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, 
-//                         dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, 
-//                         varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi
-//                     </span>
-//                 </div>
-//             </div>
-
-//             <div class="publication__likes">
-//                 <div class="like">
-//                     <fa icon="thumbs-up" />
-//                 </div>
-//                 <div class="dislike">
-//                     <fa icon="thumbs-down" />
-//                 </div>
-//             </div>
-
-//             <div class="publication__comments">
-//                 <p>comments</p>
-//             </div>
-//         </div>
-//     `
-// }
-
 </script>
 
 <style scoped>    
@@ -144,10 +167,19 @@ export default {
     
     .main_container{
         display: flex;
-        justify-content: center;
+        align-items: center;
+        flex-direction: column;
         min-height: 80em;
         height: auto;
         width: 50em;
+    }
+
+    .container_post {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        width: 40em;
     }
 
     .main_container h1 {
@@ -191,6 +223,10 @@ export default {
         color: #B22B27;
     }
 
+    #comment textarea {
+        min-width: 29em;
+        padding: 5px;
+    }
 
     /* FOOTER */
 

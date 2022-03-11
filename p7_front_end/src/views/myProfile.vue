@@ -44,7 +44,7 @@ export default {
         axios
         .get("http://localhost:3000/auth", {
             headers: {
-                Authorization: "Bearer " + this.users.accessToken
+                Authorization: "Bearer " + localStorage.getItem('token')
             }
         })
 
@@ -73,13 +73,13 @@ export default {
             axios
                 .delete("http://localhost:3000/auth", {
                     headers: {
-                        Authorization: "Bearer " + this.users.accessToken
+                        Authorization: "Bearer " + localStorage.getItem('token')
                     }
                 })
 
                 .then(() => {
                     localStorage.clear();
-                    document. location. href="http://localhost:8080";
+                    this.$router.push('/');
                 })
         }
     }

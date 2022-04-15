@@ -8,9 +8,11 @@ module.exports = {
         return new Promise((resolve, reject) => { 
             jwt.sign({ 
                 userId: user.user_id,
-                isAdmin: user.isAdmin
+                isAdmin: user.isAdmin,
+                firstName: user.firstName,
+                lastName: user.lastName
             }, 
-             accessTokenSecret, 
+             accessTokenSecret,
             { 
                 expiresIn: "24h",
             }, 
@@ -32,17 +34,5 @@ module.exports = {
             })
         })
     },
-    checkUserId(data) {
-        if (data > 1) {
-            let token = data.split(' ')[1];
-            try {
-                let decodedToken = jwt.verify(token, accessTokenSecret);
-                userId = decodedToken.userId;
-                return userId;
-            } catch (err) {
-                return err;
-            }
-        }
-    },    
 }
 

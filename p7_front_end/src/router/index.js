@@ -14,7 +14,7 @@ const routes = [
         name: 'profile',
         path: '/myProfile',
         component: Profile,
-        props: true
+        props: true,
     },
     {
         name: 'groupomania',

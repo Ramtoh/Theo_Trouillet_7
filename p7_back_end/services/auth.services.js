@@ -7,6 +7,7 @@ const createError = require('http-errors');
 const jwt = require('../utils/jwt');
 const { fs, read } = require('fs');
 const { nextTick } = require('process');
+const cookieParser = require('cookie-parser');
 
 class AuthService {
     static async register(data) {
@@ -34,7 +35,7 @@ class AuthService {
         if(!checkPassword) throw createError.Unauthorized('E-mail ou mot de passe incorrect..')
         delete users.password
         const accessToken = await jwt.signAccessToken(users)
-        return { ...users, accessToken }
+        return { ...users, accessToken}
     }
 
     static async all() {
@@ -42,19 +43,9 @@ class AuthService {
         return allUsers;
     }
 
-    static async me(req, res, next) {
-        let headerAuth = req.headers["authorization"];
-        console.log(headerAuth);
-        let id = jwt.checkUserId(headerAuth);
-        console.log(id);
-
-        prisma.users.findUnique({
-            where: {
-                user_id: id
-            }
-        })
+    static async me(req, res) {
+        return res.json({ user: { id: req.userId, role: req.userIsAdmin, firstName: req.userFirstName, lastName: req.userLastName }});
     }
 }
-
 
 module.exports = AuthService;

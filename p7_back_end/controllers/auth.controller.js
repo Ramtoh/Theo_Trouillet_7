@@ -1,6 +1,8 @@
 const auth = require('../services/auth.services');
 const createError = require('http-errors');
 const { prisma } = require('@prisma/client');
+const accessToken = require('../utils/jwt');
+const { signAccessToken } = require('../utils/jwt');
 
 class authController {
     static register = async (req, res, next) => {
@@ -20,6 +22,10 @@ class authController {
     static login = async (req, res, next) => { 
         try {
             const retourDB = await auth.login(req.body)
+            const token = retourDB.accessToken;
+            res.cookie("access_token", token, {
+                credentials: 'include',
+            })
             res.status(200).json({
                 status: true,
                 message: 'Compte connecté avec succès',
@@ -45,7 +51,7 @@ class authController {
 
     static me = async (req, res, next) => { 
         try {
-            const retourDB = await auth.me();
+            const retourDB = await auth.me(req, res, next);
             res.status(200).json({
                 status: true, 
                 message: 'Cet utilisateur',

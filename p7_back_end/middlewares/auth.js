@@ -8,6 +8,7 @@ try {
     if (req.body.userId && req.body.userId !== userId) {
         throw 'ID Utilisateur non valable!';
     } else {
+        req.userId = userId;
         next();
     }
 } catch (error) {

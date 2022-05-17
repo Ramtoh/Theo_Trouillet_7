@@ -42,7 +42,7 @@ export default {
 
     mounted() {
         axios
-        .get("http://localhost:3000/auth", {
+        .get("http://localhost:3000/auth/me", {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('token')
             }
@@ -50,7 +50,7 @@ export default {
 
         .then(res => {
             console.log(`Message de l'API :`, res);
-            this.users = res.data
+            this.users = res.data;
         })
 
         .catch(err => console.log(err));

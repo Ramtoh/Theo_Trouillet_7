@@ -4,6 +4,7 @@ const createError = require('http-errors');
 const post = require('./posts.route');
 const comments = require('./comments.route');
 const likes = require('./likes.route');
+const multer = require('../middlewares/multer-config');
 
 router.get('/', (req, res) => {
     res.send('hello world');

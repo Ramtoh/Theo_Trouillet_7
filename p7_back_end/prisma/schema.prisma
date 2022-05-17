@@ -8,24 +8,38 @@ datasource db {
 }
 
 model users {
-  user_id   Int      @id @default(autoincrement())
+  user_id   Int      @id @default(autoincrement()) @db.UnsignedInt
   firstName String   @db.VarChar(255)
   lastName  String   @db.VarChar(255)
   email     String   @unique(map: "email") @db.VarChar(255)
   password  String   @db.VarChar(255)  
   createdAt DateTime @default(now())
   isAdmin   Boolean  @default(false)
+  post post[]
+  comments comments[]
 }
 
 model post {
-  post_id  Int    @id @default(autoincrement())
+  post_id  Int    @id @default(autoincrement()) @db.UnsignedInt
   title    String @db.VarChar(50)
   content  String @db.Text
+  author_id Int @db.UnsignedInt
+  users     users @relation(fields: [author_id], references: [user_id])
+  comments   comments[]
+
+  @@index([author_id], name: "FK1_AUTHORID")
 }
 
 model comments {
   comment_id Int    @id @default(autoincrement())
+  author_id  Int @db.UnsignedInt
+  publication_id    Int @db.UnsignedInt
   content    String @db.Text
+  users      users @relation(fields: [author_id], references:[user_id])
+  post       post @relation(fields: [publication_id], references:[post_id])
+
+  @@index([publication_id], name: "FK1_PUBLICATIONID")
+  @@index([author_id], name: "FK2_AUTHORID")
 }
 
 model likes {

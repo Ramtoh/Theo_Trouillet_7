@@ -44,7 +44,13 @@ class AuthService {
     }
 
     static async me(req, res) {
-        return res.json({ user: { id: req.userId, role: req.userIsAdmin, firstName: req.userFirstName, lastName: req.userLastName }});
+        const userId = req.userId;
+        const users = await prisma.users.findUnique({
+            where: {
+                user_id: userId
+            }
+        });
+        return res.json({ id: users.user_id, role: users.isAdmin, firstName: users.firstName, lastName: users.lastName });
     }
 }
 

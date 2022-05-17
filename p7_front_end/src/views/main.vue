@@ -26,16 +26,22 @@
         <main>
             <div class="container">
                 <div class="main_container">
-                    <h1>Bienvenue, retrouvez le fil d'actualité :</h1>
+                    <h1>Bienvenue {{ users.firstName }}, retrouvez le fil d'actualité :</h1>
                     <div id="publications">
                             <div class="container_post">
                                 <div class="publication__header">
                                     <div class="publication__author">
-                                        <!-- <img src="" alt="" /> -->
-                                        <p v-for="user in users" :key="user.firstName">{{user.firstName}}</p>
-                                        <p v-for="user in users" :key="user.lastName">{{user.lastName}}</p>
+                                        <img src="" alt="" />
+                                        <p>{{users.firstName}}</p>
+                                        <p>{{users.lastName}}</p>
                                     </div>
                                 </div>
+                                <!-- <li>
+                                    {{this.posts[0].title}}
+                                </li> -->
+                                <li v-for="post in posts" :key="post.post_id">
+                                    {{ post.title }}
+                                </li>
 
                                 <div class="publication__main">
                                     <div class="publication__mainTitle">
@@ -110,6 +116,7 @@ export default {
             mode: 'groupomania',
             users: [],
             posts: [],
+            comments: [],
         }
     },
 
@@ -122,9 +129,9 @@ export default {
             })
 
             .then(res => {
+                this.users = res.data;
                 console.log(res);
             })
-            .then(data => { console.log(data) })
             .catch(err => console.log(err));
 // recupere les differents posts de l'API
         axios
@@ -136,7 +143,8 @@ export default {
 
             .then(res => {
                 console.log(res);
-                this.posts = res.data;
+                this.post = res.data.posts;
+                console.log(res.data.posts);
             })
 
             .catch(err => console.log(err));
@@ -150,7 +158,7 @@ export default {
         },
         disconnect() {
             localStorage.clear();
-            document. location. href="http://localhost:8080"
+            this.$router.push({ path: '/' });
         },
     }
 }

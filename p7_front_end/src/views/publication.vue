@@ -1,14 +1,10 @@
 <template>
     <div class="publication">
         <h1>Ajouter une publication</h1>
-        <form class="publication__content" method="post" @submit.prevent="createPublication">
+        <form class="publication__content" method="post" @submit.prevent="createPublication" action="/" enctype="multipart/form-data">
             <input class="publication__el publication__title" type="text" placeholder="Titre" v-model="title" required>
             <input class="publication__el publication__description" type="text" placeholder="Description" v-model="content" required>
-            <div class="publication__img">
-                <p>Ajouter une image</p>
-                <input type="file">
-            </div>
-                <button type="submit" class="submit__button">Publier</button>
+                <button type="submit" class="submit__button" value="Upload" @click="createPublication">Publier</button>
         </form>
     </div>
 </template>
@@ -21,20 +17,22 @@ export default {
         return {
             title: '',
             content: '',
+            users: {},
         };
     },
 
     mounted() {
         axios
-            .get("http://localhost:3000/auth", {
+            .get("http://localhost:3000/auth/me", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('token')
                 }
             })
 
-            // .then(res => {
-            //     // console.log(`Réponse API`, res);
-            // })
+           .then(res => {
+                this.users = res.data;
+                console.log(res);
+            })
 
             .catch(e => console.log(e));
     },
@@ -43,16 +41,15 @@ export default {
         createPublication() {
             axios
                 .post("http://localhost:3000/main", {
-                    title: this.title,
-                    content: this.content,
-
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem('token')
                     },
+                    title: this.title,
+                    content: this.content,
                 })
             .then(res => {
                 console.log(res);
-                this.$router.push('/groupomania');
+                // this.$router.push('/groupomania');
             })
             .catch(err => {
                 console.log(err);

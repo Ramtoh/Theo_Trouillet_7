@@ -6,17 +6,22 @@ const createError = require('http-errors');
 
 router.post('/', async (req, res) => {
     try {
-        const { title, content } = req.body
+        const { title, content } = req.body;
         const result = await prisma.post.create({
             data: {
                 title,
                 content,
+                users: {
+                    connect: {
+                            user_id: author_id
+                    }
+                },
             },
         })
         res.json(result)
     }
     catch(e) {
-        next(createError(e.statusCode, e.message))
+        console.log(e);
     }
 });
 

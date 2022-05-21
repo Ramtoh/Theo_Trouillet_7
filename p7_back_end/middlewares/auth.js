@@ -9,6 +9,7 @@ try {
         throw 'ID Utilisateur non valable!';
     } else {
         req.userId = userId;
+        console.log(userId);
         next();
     }
 } catch (error) {

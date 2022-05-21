@@ -51,7 +51,6 @@ class authController {
 
     static me = async (req, res, next) => { 
         try {
-            console.log('passer par la');
             const retourDB = await auth.me(req, res, next);
             res.status(200).json({
                 status: true, 

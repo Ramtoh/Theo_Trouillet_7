@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 });
 
 router.use('/auth', auth);
-router.use('/main', post);
+router.use('/main', auth, post);
 router.use('/main/comments', comments);
 router.use('/main/likes', likes);
 

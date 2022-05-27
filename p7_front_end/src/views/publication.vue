@@ -49,7 +49,7 @@ export default {
                 })
             .then(res => {
                 console.log(res);
-                this.$router.push('/groupomania');
+                // this.$router.push('/groupomania');
             })
             .catch(err => {
                 console.log(err);

@@ -1,19 +1,23 @@
 const router = require('express').Router();
 const { PrismaClient } = require('@prisma/client');
 const { read } = require('fs');
+const jwt = require('jsonwebtoken');
 const prisma = new PrismaClient();
 const createError = require('http-errors');
 
 router.post('/', async (req, res) => {
     try {
         const { title, content } = req.body;
-        const user_id = 10;
-        console.log(req.userId);
+        const { userId } = req.userId;
         const result = await prisma.post.create({
             data: {
                 title,
                 content,
-                user_id: 10,
+                users: {
+                    connect: { 
+                        user_id: userId
+                    }
+                }
             },
         })
         res.json(result)

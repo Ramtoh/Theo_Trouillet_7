@@ -37,21 +37,6 @@ class AuthService {
         const accessToken = await jwt.signAccessToken(users)
         return { ...users, accessToken}
     }
-
-    static async all() {
-        const allUsers = await prisma.users.findMany();
-        return allUsers;
-    }
-
-    static async me(req, res) {
-        const userId = req.userId;
-        const users = await prisma.users.findUnique({
-            where: {
-                user_id: userId
-            }
-        });
-        return res.json({ id: users.user_id, role: users.isAdmin, firstName: users.firstName, lastName: users.lastName });
-    }
 }
 
 module.exports = AuthService;

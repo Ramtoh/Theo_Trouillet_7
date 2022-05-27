@@ -23,38 +23,9 @@ class authController {
         try {
             const retourDB = await auth.login(req.body)
             const token = retourDB.accessToken;
-            res.cookie("access_token", token, {
-                credentials: 'include',
-            })
             res.status(200).json({
                 status: true,
                 message: 'Compte connecté avec succès',
-                retourDB
-            })
-        } catch (e) {
-            next(createError(e.statusCode, e.message))
-        }
-    }
-
-    static all = async (req, res, next) => {
-        try {
-            const users = await auth.all();
-            res.status(200).json({
-                status: true,
-                message: 'Tous les utilisateurs',
-                retourDB: users
-            })
-        } catch(e) {
-            next(createError(e.statusCode, e.message))
-        }
-    }
-
-    static me = async (req, res, next) => { 
-        try {
-            const retourDB = await auth.me(req, res, next);
-            res.status(200).json({
-                status: true, 
-                message: 'Cet utilisateur',
                 retourDB
             })
         } catch (e) {

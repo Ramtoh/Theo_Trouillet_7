@@ -17,13 +17,13 @@ export default {
         return {
             title: '',
             content: '',
-            users: {},
+            users: '',
         };
     },
 
     mounted() {
         axios
-            .get("http://localhost:3000/auth/me", {
+            .get("http://localhost:3000/user/me", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('token')
                 }
@@ -39,11 +39,15 @@ export default {
 
     methods: {
         createPublication() {
+            console.log(localStorage.getItem('token'));
+            let token = localStorage.getItem('token');
             axios
                 .post("http://localhost:3000/main", {
                     headers: {
-                        Authorization: "Bearer " + localStorage.getItem('token')
-                    },
+                        'Content-Type' : 'application/json',
+                        'Accept' : 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }, 
                     title: this.title,
                     content: this.content,
                 })

@@ -26,30 +26,28 @@
         <main>
             <div class="container">
                 <div class="main_container">
-                    <h1>Bienvenue {{ users.firstName }}, retrouvez le fil d'actualité :</h1>
+                    <h1>Bienvenue {{ users.retourDB.firstName }}, retrouvez le fil d'actualité :</h1>
                     <div id="publications">
                             <div class="container_post">
                                 <div class="publication__header">
                                     <div class="publication__author">
                                         <img src="" alt="" />
-                                        <p>{{users.firstName}}</p>
-                                        <p>{{users.lastName}}</p>
                                     </div>
                                 </div>
                                 <!-- <li>
                                     {{this.posts[0].title}}
                                 </li> -->
-                                <li v-for="post in posts" :key="post.post_id">
-                                    {{ post.title }}
-                                </li>
+                                <!-- <li v-for="post in posts" :key="post.post_id"> -->
+                                    <!-- {{ retourDB.post.title }} -->
+                                <!-- </li> -->
 
                                 <div class="publication__main">
                                     <div class="publication__mainTitle">
-                                        <h2>{{posts.title}}</h2>
+                                        <!-- <h2>{{retourDB.post.title}}</h2> -->
                                     </div>
                                     <div class="publication__mainContent">
                                         <span>
-                                            {{posts.content}}
+                                            <!-- {{retourDB.post.content}} -->
                                         </span>
                                     </div>
                                     <!-- <div id="comment">
@@ -119,8 +117,7 @@ export default {
             comments: [],
         }
     },
-
-    mounted() {
+    beforeMount() {
         axios
             .get("http://localhost:3000/user/me", {
                 headers: {
@@ -133,6 +130,20 @@ export default {
                 console.log(res);
             })
             .catch(err => console.log(err));
+    },
+    mounted() {
+        // axios
+        //     .get("http://localhost:3000/user/me", {
+        //         headers: {
+        //             Authorization: "Bearer " + localStorage.getItem('token')
+        //         }
+        //     })
+
+        //     .then(res => {
+        //         this.users = res.data;
+        //         console.log(res);
+        //     })
+        //     .catch(err => console.log(err));
 // recupere les differents posts de l'API
         axios
             .get("http://localhost:3000/main", {
@@ -143,6 +154,7 @@ export default {
 
             .then(res => {
                 console.log(res);
+                console.log(localStorage);
                 this.post = res.data.posts;
                 console.log(res.data.posts);
             })
@@ -157,6 +169,9 @@ export default {
             this.$router.push({ path: '/publish' });
         },
         disconnect() {
+            if (
+                window.confirm("Confirmation de déconnexion")
+            )
             localStorage.clear();
             this.$router.push({ path: '/' });
         },

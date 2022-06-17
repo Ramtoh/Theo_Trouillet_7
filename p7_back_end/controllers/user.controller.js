@@ -27,8 +27,19 @@ class userController {
             next(createError(e.statusCode, e.message))
         }
     }
+
+    static delete = async (req, res, next) => {
+        try {
+            const users = await user.delete(req, res, next);
+            res.status(200).json({
+                status: true,
+                message: 'Utilisateur supprimé',
+                users
+            })
+        } catch (e) {
+            next(createError(e.statusCode, e.message))
+        }
+    }
 }
-
-
 
 module.exports = userController;

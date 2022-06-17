@@ -8,20 +8,16 @@
             </div>
             <div class="user__main">
                 <img class="user_image" src="../img/default_user.jpg">
-                <div v-if="mode== 'modifyProfile'" class="modify_profile_icon">
-                    <p>Ajouter un avatar</p>
-                    <input type="file">
-                </div>
                 <div class="user_name">
-                    <p class="user_firstname">{{ users.firstName }}</p>
-                    <p class="user_lastname">{{ users.lastName }}</p>
+                    <p class="user_firstname">{{ users.retourDB.firstName }}</p>
+                    <p class="user_lastname">{{ users.retourDB.lastName }}</p>
                 </div>
 
-                <p class="user_email">{{ users.email }}</p>
+                <p class="user_email">{{ users.retourDB.email }}</p>
 
                 <div>
                     <button v-if="mode == 'myProfile'" @click="modifyProfile()">Modifier son profil</button>
-                    <button v-else @click="myProfile()" type="submit">Valider les modifications</button> <!-- valider les modifications --> 
+                    <button v-else @click="myProfile()" type="submit">Retour au profil</button> <!-- valider les modifications --> 
                 </div>
                 <button v-if="mode =='modifyProfile'" @click="deleteProfile()" type="submit" class="deleteButton">Supprimer le profil</button>
             </div>
@@ -39,21 +35,34 @@ export default {
             mode: 'myProfile',
         }
     },
-
-    mounted() {
+    beforeCreate() {
         axios
-        .get("http://localhost:3000/auth/me", {
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem('token')
-            }
-        })
+            .get("http://localhost:3000/user/me", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('token')
+                }
+            })
 
-        .then(res => {
-            console.log(`Message de l'API :`, res);
-            this.users = res.data;
-        })
+            .then(res => {
+                this.users = res.data;
+                console.log(res);
+            })
+            .catch(err => console.log(err));
+    },
+    mounted() {
+        // axios
+        // .get("http://localhost:3000/user/me", {
+        //     headers: {
+        //         Authorization: "Bearer " + localStorage.getItem('token')
+        //     }
+        // })
 
-        .catch(err => console.log(err));
+        // .then(res => {
+        //     console.log(`Message de l'API :`, res);
+        //     this.users = res.data;
+        // })
+
+        // .catch(err => console.log(err));
     },
 
     methods: {
@@ -71,7 +80,7 @@ export default {
                 window.confirm("Souhaitez vous vraiment supprimer votre compte?")
             )
             axios
-                .delete("http://localhost:3000/auth", {
+                .delete("http://localhost:3000/user/me", {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem('token')
                     }

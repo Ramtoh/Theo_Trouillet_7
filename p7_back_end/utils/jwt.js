@@ -25,6 +25,7 @@ module.exports = {
         })
     },
     verifyAccessToken(token) {
+        console.log(token);
         return new Promise((resolve, reject) => {
             jwt.verify(token, accessTokenSecret, (err) => {
                 if (err) {

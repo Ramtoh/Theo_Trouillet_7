@@ -19,7 +19,16 @@ class userService {
                 user_id: userId
             }
         });
-        return res.json({ id: users.user_id, role: users.isAdmin, firstName: users.firstName, lastName: users.lastName });
+        return users
+    }
+
+    static async delete(req, res) {
+        const userId = req.userId;
+        await prisma.users.delete({
+            where: {
+                user_id: userId,
+            },
+        });
     }
 }
 

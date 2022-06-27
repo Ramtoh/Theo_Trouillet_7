@@ -26,51 +26,21 @@
         <main>
             <div class="container">
                 <div class="main_container">
-                    <h1>Bienvenue {{ users.retourDB.firstName }}, retrouvez le fil d'actualité :</h1>
-                    <div id="publications">
-                            <div class="container_post">
-                                <div class="publication__header">
-                                    <div class="publication__author">
-                                        <img src="" alt="" />
-                                    </div>
-                                </div>
-                                <!-- <li>
-                                    {{this.posts[0].title}}
-                                </li> -->
-                                <!-- <li v-for="post in posts" :key="post.post_id"> -->
-                                    <!-- {{ retourDB.post.title }} -->
-                                <!-- </li> -->
-
-                                <div class="publication__main">
-                                    <div class="publication__mainTitle">
-                                        <!-- <h2>{{retourDB.post.title}}</h2> -->
-                                    </div>
-                                    <div class="publication__mainContent">
-                                        <span>
-                                            <!-- {{retourDB.post.content}} -->
-                                        </span>
-                                    </div>
-                                    <!-- <div id="comment">
-                                            <textarea type="text" id="comment" v-model="content" placeholder="Ajoutez un commentaire.."></textarea>
-                                            <a v-on:click="createComment()">
-                                                <fa icon="fa-comments" title="Commenter"/>
-                                            </a>
-                                        </div> -->
-                                </div>
-                            </div>
-
-                            <!-- <ul class="showComments">
-                                <li>
-                                    <h3>{{comments.authorId.firstName}}</h3>
-                                     <span>{{content}}</span>
-
-                                    <p v-if="users.user_id==comments.authorId || users.isAdmin">
-                                        <button @click.prevent="deleteComment(comments.comment_id, comments.authorId)" id="delete_button" >
-                                            <fa icon="fa-solid fa-trash-can-slash" />
-                                        </button>
-                                    </p>
-                                </li>
-                            </ul> -->
+                    <div class="welcome_message">
+                        <h1>Bienvenue {{ users.retourDB.firstName }}, retrouvez le fil d'actualité :</h1>
+                    </div>
+                    <div id="publications" v-for="(post) in posts" :key="post.post_id">
+                        <ul>
+                            <li>
+                                {{ post.users}}
+                            </li>
+                            <li>
+                                {{ post.title }}
+                            </li> 
+                            <li>
+                                {{ post.content }}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -132,19 +102,6 @@ export default {
             .catch(err => console.log(err));
     },
     mounted() {
-        // axios
-        //     .get("http://localhost:3000/user/me", {
-        //         headers: {
-        //             Authorization: "Bearer " + localStorage.getItem('token')
-        //         }
-        //     })
-
-        //     .then(res => {
-        //         this.users = res.data;
-        //         console.log(res);
-        //     })
-        //     .catch(err => console.log(err));
-// recupere les differents posts de l'API
         axios
             .get("http://localhost:3000/main", {
                 headers: {
@@ -153,10 +110,7 @@ export default {
             })
 
             .then(res => {
-                console.log(res);
-                console.log(localStorage);
-                this.post = res.data.posts;
-                console.log(res.data.posts);
+                this.posts = res.data.posts;
             })
 
             .catch(err => console.log(err));
@@ -197,15 +151,28 @@ export default {
         width: 50em;
     }
 
-    .container_post {
+    #publications {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 200px;
-        width: 40em;
+        padding-top: 40px;
     }
 
-    .main_container h1 {
+    #publications ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        background-color: #1E1E1C;
+        border-radius: 25px;
+        width: 400px;
+        padding: 20px;
+    }
+
+    #publications li {
+        color: white;
+    }
+
+    .welcome_message h1 {
         padding-top: 20px;
         font-size: 1.5em;
     }

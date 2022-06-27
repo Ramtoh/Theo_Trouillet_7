@@ -43,13 +43,14 @@ export default {
             let token = localStorage.getItem('token');
             axios
                 .post("http://localhost:3000/main", {
+                        title: this.title,
+                        content: this.content,
+                    },{
                     headers: {
                         'Content-Type' : 'application/json',
                         'Accept' : 'application/json',
                         'Authorization': `Bearer ${token}`,
                     }, 
-                    title: this.title,
-                    content: this.content,
                 })
             .then(res => {
                 console.log(res);

@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const auth = (req, res, next) => { 
 try {
     const token = req.headers.authorization.split(' ')[1];
-    console.log("passer par ici");
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const userId = decodedToken.userId;
     if (req.body.userId && req.body.userId !== userId) {

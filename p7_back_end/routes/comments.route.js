@@ -1,15 +1,9 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const auth = require('../middlewares/auth');
+const comment = require('../controllers/comment.controller');
 
-router.post('/', async (req, res) => {
-    const { content } = req.body
-    const result = await prisma.comments.create({
-        data: {
-            content,
-        },
-    })
-    res.json(result)
-});
+router.post('/:postId', auth, comment.comment);
+
+router.get('/:publicationId', auth, comment.getAllFromOne);
 
 module.exports = router;

@@ -19,17 +19,25 @@
                 </p>
             </div>
 
-            <div class="form_el" v-if="mode == 'create'">
-                <input type="text" class="form_el_input" v-model="firstName" placeholder="Prénom" required>
-                <input type="text" class="form_el_input" v-model="lastName" placeholder="Nom" required>
+            <div class="names" v-if="mode == 'create'">
+                <div class="form_el">
+                    <label for="firstName">Prénom :</label>
+                    <input type="text" id="firstName" class="form_el_input" v-model="firstName" placeholder="Prénom" required>
+                </div>
+                <div class="form_el">
+                    <label for="lastName">Nom :</label>
+                    <input type="text" id="lastName" class="form_el_input form_lastname" v-model="lastName" placeholder="Nom" required>
+                </div>
             </div>
 
             <div class="form_el">
-                <input type="text" class="form_el_input" v-model="email" placeholder="Adresse e-mail" required>
+                <label for="email">Adresse e-mail :</label>
+                <input id="email" type="text" class="form_el_input" v-model="email" placeholder="Adresse e-mail" required>
             </div>
 
             <div class="form_el">
-                <input type="password" class="form_el_input" v-model="password" placeholder="Mot de passe" required>
+                <label class="password" for="password">Mot de passe :</label>
+                <input id="password" type="password" class="form_el_input" v-model="password" placeholder="Mot de passe" required>
             </div>
 
             <div class="form_el">
@@ -107,6 +115,20 @@ export default {
         flex-wrap: wrap;
     }
 
+    .form_lastname {
+        margin-left: 20px;
+    }
+
+    label{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .password{
+        padding-right: 10px;
+    }
+
     .form_el_input{ 
         padding: 8px;
         border: none;
@@ -135,6 +157,7 @@ export default {
         justify-content: center;
         padding-bottom: 10px;
     }
+    
 
     .login_img{
         display: flex; 
@@ -184,4 +207,5 @@ export default {
             filter: brightness(0) invert(1);
         }
     }
+
 </style>

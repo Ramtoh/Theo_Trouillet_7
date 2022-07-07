@@ -11,13 +11,16 @@
             <div class="container_header_modify">
                 <nav>
                     <a href="" @click="myProfile()" class="myProfile">
-                        <fa icon="user-circle"/>
+                        <fa id="user_circle" icon="user-circle"/>
+                        <label for="user_circle" class="label_nav">Mon profil</label>
                     </a>
                     <a href="" @click="addPost()" class="addPost">
-                        <fa icon="plus-circle"/>
+                        <fa id="plus-circle" icon="plus-circle"/>
+                        <label for="plus-circle" class="label_nav">Ajouter un post</label>
                     </a>  
                     <a href="" @click="disconnect()" class="disconnect">
-                        <fa icon="power-off"/> 
+                        <fa id="power-off" icon="power-off"/> 
+                        <label for="power-off" class="label_nav">Déconnexion</label>
                     </a>    
                 </nav>
             </div>
@@ -27,20 +30,37 @@
             <div class="container">
                 <div class="main_container">
                     <div class="welcome_message">
-                        <h1>Bienvenue {{ users.retourDB.firstName }}, retrouvez le fil d'actualité :</h1>
+                        <h1>Bienvenue {{  users.firstName }}, retrouvez le fil d'actualité :</h1>
                     </div>
                     <div id="publications" v-for="(post) in posts" :key="post.post_id">
                         <ul>
                             <li>
-                                {{ post.users}}
+                                {{ }} <!-- prenom et nom de l'auteur (author_id) -->
                             </li>
-                            <li>
+                            <li class="post_title">
                                 {{ post.title }}
+                                <div class="trashIcon" v-if="users.user_id==post.author_id || users.isAdmin == true" @click="deletePost(post.post_id)">
+                                    <fa icon="trash"/>
+                                </div>
                             </li> 
-                            <li>
+                            <li class="post_content">
                                 {{ post.content }}
                             </li>
+                            <li class="commentApost">
+                                <div class="addComment">
+                                    <form method="post" @submit.prevent="comment(post.post_id)" action="/" enctype="multipart/form-data">
+                                        <input type="text" name="text" class="inputComment" placeholder="Insérez votre commentaire.." v-model="content" required>
+                                        <button type="submit" value="Upload">Commenter</button>
+                                    </form>
+                                </div>
+                            </li>
+                            <li>
+                                Commentaires :
+                                {{  }} <!-- commentaires du post en question ? --> 
+                            </li>
+
                         </ul>
+                        
                     </div>
                 </div>
             </div>
@@ -81,13 +101,13 @@ export default {
     name: 'groupomania',
     data: function () {
         return {
-            mode: 'groupomania',
+            mode: 'groupomania', 
             users: [],
             posts: [],
             comments: [],
         }
     },
-    beforeMount() {
+    mounted() {
         axios
             .get("http://localhost:3000/user/me", {
                 headers: {
@@ -96,12 +116,11 @@ export default {
             })
 
             .then(res => {
-                this.users = res.data;
+                this.users = res.data.users;
                 console.log(res);
             })
             .catch(err => console.log(err));
-    },
-    mounted() {
+
         axios
             .get("http://localhost:3000/main", {
                 headers: {
@@ -111,17 +130,81 @@ export default {
 
             .then(res => {
                 this.posts = res.data.posts;
+                console.log(res);
             })
 
             .catch(err => console.log(err));
+
+        // axios
+        //     .get("http://localhost:3000/main/comments/"+publicationId, 
+        //     {
+        //         headers: {
+        //             Authorization: "Bearer " + localStorage.getItem('token')
+        //         }
+        //     })
+        //     .then(res => {
+        //         this.comments = res.data.comments;
+        //         console.log(res);
+        //     })
+
+        //     .catch(err => console.log(err));
     },
     methods: {
+        deletePost(id) {
+            let token = localStorage.getItem('token');
+
+            if (
+                window.confirm("Le post va être supprimé")
+            )
+
+            axios
+                .delete("http://localhost:3000/main/"+id,
+            {
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Accept' : 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },      
+            })
+            .then(res => {
+                console.log(res);
+                window.location.reload();
+            })
+            .catch(error => console.log(error));
+        },
+
+        comment(postId) {
+        let token = localStorage.getItem('token');
+          {
+            axios
+                .post("http://localhost:3000/main/comments/"+postId,
+                    {
+                        content: this.content,
+                        publicationId: postId
+                    },
+                    {
+                        headers: {
+                            'Content-Type' : 'application/json',
+                            'Accept' : 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    })
+                .then(res => {
+                    console.log(res);
+                    window.location.reload();
+                })
+                .catch(error => console.log(error));
+          }  
+        },
+
         myProfile() {
             this.$router.push({ path: '/myProfile' });
         },
+
         addPost() {
             this.$router.push({ path: '/publish' });
         },
+
         disconnect() {
             if (
                 window.confirm("Confirmation de déconnexion")
@@ -155,7 +238,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-top: 40px;
+        padding-top: 20px;
     }
 
     #publications ul {
@@ -170,11 +253,92 @@ export default {
 
     #publications li {
         color: white;
+        align-items: center;
+        display:flex;
+    }
+
+    #publications button { 
+        color: white;
+        width: 100%;
+        background-color: #3333;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 5px;
+        border-radius: 8px;
+        border-color: #E3E3E1;
+        opacity: 0.5;
+    }
+
+    #publications button:hover {
+        opacity: 1;
+    }
+
+    .label_nav{
+        font-size: 20px;
+    }
+    
+    .commentApost{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 15px;
+    }
+    .addComment {
+        display: flex;
+    }
+
+    .inputComment {
+        border: 1px solid #ccc;
+        height: auto;
+        margin-top: 5px;
+        min-height: 10px;
+        overflow: auto;
+        padding: 5px;
+        width: 360px;
+        word-break: break-word;
+    }
+    .addComment form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    
+    .textComment{
+        height: 50px;
+    }
+
+    .trashIcon{ 
+        color: white;
+    }
+
+    .trashIcon:hover {
+        color: #B22B27;
+        transition: 0.5s;
     }
 
     .welcome_message h1 {
         padding-top: 20px;
         font-size: 1.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .post_title{ 
+        font-weight: 700;
+        font-size: 20px; 
+        padding-bottom: 20px;
+        display: flex;
+        justify-content:space-between;
+    }
+
+    .post_content{
+        background-color: #E3E3E1;
+        color: #1E1E1C!important;
+        padding: 10px;
+        border-radius: 15px;
     }
 
     .container_header {
@@ -203,6 +367,10 @@ export default {
     nav a {
         font-size: 40px;
         color: #E3E3E1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     nav a:hover {
@@ -267,6 +435,13 @@ export default {
         .container {
             margin-left: 20px;
             margin-right: 20px;
+        }
+    }
+
+    @media screen and (max-width: 510px) {
+        .container {
+            margin-left: 0px;
+            margin-right: 0px;
         }
     }
 

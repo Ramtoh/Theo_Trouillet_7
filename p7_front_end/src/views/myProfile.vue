@@ -7,13 +7,13 @@
                 </a>
             </div>
             <div class="user__main">
-                <img class="user_image" src="../img/default_user.jpg">
+                <img class="user_image" src="../img/default_user.jpg" alt="">
                 <div class="user_name">
-                    <p class="user_firstname">{{ users.retourDB.firstName }}</p>
-                    <p class="user_lastname">{{ users.retourDB.lastName }}</p>
+                    <p class="user_firstname">{{ users.firstName }}</p>
+                    <p class="user_lastname">{{ users.lastName }}</p>
                 </div>
 
-                <p class="user_email">{{ users.retourDB.email }}</p>
+                <p class="user_email">{{ users.email }}</p>
 
                 <div>
                     <button v-if="mode == 'myProfile'" @click="modifyProfile()">Modifier son profil</button>
@@ -35,7 +35,7 @@ export default {
             mode: 'myProfile',
         }
     },
-    beforeCreate() {
+    mounted() {
         axios
             .get("http://localhost:3000/user/me", {
                 headers: {
@@ -44,25 +44,10 @@ export default {
             })
 
             .then(res => {
-                this.users = res.data;
+                this.users = res.data.users;
                 console.log(res);
             })
             .catch(err => console.log(err));
-    },
-    mounted() {
-        // axios
-        // .get("http://localhost:3000/user/me", {
-        //     headers: {
-        //         Authorization: "Bearer " + localStorage.getItem('token')
-        //     }
-        // })
-
-        // .then(res => {
-        //     console.log(`Message de l'API :`, res);
-        //     this.users = res.data;
-        // })
-
-        // .catch(err => console.log(err));
     },
 
     methods: {
@@ -80,7 +65,7 @@ export default {
                 window.confirm("Souhaitez vous vraiment supprimer votre compte?")
             )
             axios
-                .delete("http://localhost:3000/user/me", {
+                .delete("http://localhost:3000/user/me/:id", {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem('token')
                     }

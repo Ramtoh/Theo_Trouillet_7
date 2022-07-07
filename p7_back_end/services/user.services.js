@@ -23,12 +23,19 @@ class userService {
     }
 
     static async delete(req, res) {
+        const users = await prisma.users.findMany({})
         const userId = req.userId;
-        await prisma.users.delete({
-            where: {
-                user_id: userId,
-            },
-        });
+        const deleteUser = async (user) => {
+            return await prisma.users.delete({
+                where: {
+                    user_id: userId
+                }
+            })
+        }
+        const deleteUsers = async () => {
+            return Promise.all(users.map((user) => deleteUser(user)))
+        } 
+        deleteUsers()
     }
 }
 

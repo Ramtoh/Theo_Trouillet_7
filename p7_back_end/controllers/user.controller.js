@@ -17,11 +17,11 @@ class userController {
     
     static me = async (req, res, next) => { 
         try {
-            const retourDB = await user.me(req, res, next);
+            const users = await user.me(req, res, next);
             res.status(200).json({
                 status: true, 
                 message: 'Cet utilisateur',
-                retourDB
+                users
             })
         } catch (e) {
             next(createError(e.statusCode, e.message))

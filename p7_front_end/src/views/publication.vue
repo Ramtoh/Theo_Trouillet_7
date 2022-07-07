@@ -2,9 +2,11 @@
     <div class="publication">
         <h1>Ajouter une publication</h1>
         <form class="publication__content" method="post" @submit.prevent="createPublication" action="/" enctype="multipart/form-data">
-            <input class="publication__el publication__title" type="text" placeholder="Titre" v-model="title" required>
-            <input class="publication__el publication__description" type="text" placeholder="Description" v-model="content" required>
-                <button type="submit" class="submit__button" value="Upload" @click="createPublication">Publier</button>
+            <label for="publication__title">Titre :</label>
+            <input id="publication__title" class="publication__el publication__title" type="text" placeholder="Titre" v-model="title" required>
+            <label for="publication__content">Description :</label>
+            <input id="publication__content" class="publication__el publication__description" type="text" placeholder="Description" v-model="content" required>
+                <button type="submit" class="submit__button" value="Upload">Publier</button>
         </form>
     </div>
 </template>
@@ -30,7 +32,7 @@ export default {
             })
 
            .then(res => {
-                this.users = res.data;
+                this.users = res.data.users;
                 console.log(res);
             })
 
@@ -39,7 +41,6 @@ export default {
 
     methods: {
         createPublication() {
-            console.log(localStorage.getItem('token'));
             let token = localStorage.getItem('token');
             axios
                 .post("http://localhost:3000/main", {
@@ -54,7 +55,10 @@ export default {
                 })
             .then(res => {
                 console.log(res);
-                // this.$router.push('/groupomania');
+                if(
+                    window.confirm('Post créé!')
+                )
+                this.$router.push('/groupomania');
             })
             .catch(err => {
                 console.log(err);

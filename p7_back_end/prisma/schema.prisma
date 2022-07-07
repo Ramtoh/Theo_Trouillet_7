@@ -24,7 +24,7 @@ model post {
   title    String @db.VarChar(50)
   content  String @db.Text
   author_id Int @db.UnsignedInt
-  users     users @relation(fields: [author_id], references: [user_id])
+  users     users @relation(fields: [author_id], references: [user_id], onDelete: Cascade)
   comments   comments[]
 
   @@index([author_id], name: "FK1_AUTHORID")
@@ -35,14 +35,9 @@ model comments {
   author_id  Int @db.UnsignedInt
   publication_id    Int @db.UnsignedInt
   content    String @db.Text
-  users      users @relation(fields: [author_id], references:[user_id])
+  users      users @relation(fields: [author_id], references:[user_id], onDelete: Cascade) 
   post       post @relation(fields: [publication_id], references:[post_id])
 
   @@index([publication_id], name: "FK1_PUBLICATIONID")
   @@index([author_id], name: "FK2_AUTHORID")
-}
-
-model likes {
-  like_id  Int @id @default(autoincrement())
-  liked Boolean
 }

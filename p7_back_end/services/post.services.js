@@ -17,14 +17,20 @@ class postService {
                     connect: { 
                         user_id: req.userId
                     }
-                }
+                },
             },
+            
         })
         return post
     };
     
     static async get() {
-        const posts = await prisma.post.findMany();
+        const posts = await prisma.post.findMany({
+            include: {
+                users: true,
+                comments: true,
+            },
+        });
         return posts
     }
     

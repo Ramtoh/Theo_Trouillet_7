@@ -35,7 +35,8 @@
                     <div id="publications" v-for="(post) in posts" :key="post.post_id">
                         <ul>
                             <li>
-                                {{ }} <!-- prenom et nom de l'auteur (author_id) -->
+                                {{ post.users.firstName }} 
+                                {{ post.users.lastName }}
                             </li>
                             <li class="post_title">
                                 {{ post.title }}
@@ -54,13 +55,15 @@
                                     </form>
                                 </div>
                             </li>
-                            <li>
-                                Commentaires :
-                                {{  }} <!-- commentaires du post en question ? --> 
+                            <li class="comment_el">
+                                <div>
+                                    Commentaires :
+                                </div>
+                                <div v-for="comment in post.comments" :key="comment" class="commentsOfAPost">
+                                    {{ comment.content }} 
+                                </div>
                             </li>
-
                         </ul>
-                        
                     </div>
                 </div>
             </div>
@@ -135,19 +138,6 @@ export default {
 
             .catch(err => console.log(err));
 
-        // axios
-        //     .get("http://localhost:3000/main/comments/"+publicationId, 
-        //     {
-        //         headers: {
-        //             Authorization: "Bearer " + localStorage.getItem('token')
-        //         }
-        //     })
-        //     .then(res => {
-        //         this.comments = res.data.comments;
-        //         console.log(res);
-        //     })
-
-        //     .catch(err => console.log(err));
     },
     methods: {
         deletePost(id) {
@@ -232,6 +222,7 @@ export default {
         min-height: 80em;
         height: auto;
         width: 50em;
+        padding-bottom: 30px;
     }
 
     #publications {
@@ -339,6 +330,22 @@ export default {
         color: #1E1E1C!important;
         padding: 10px;
         border-radius: 15px;
+    }
+
+    .comment_el {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .commentsOfAPost {
+        background-color: #E3E3E1;
+        color: #1E1E1C!important;
+        width: 200px;
+        margin-top: 10px;
+        padding: 5px;
+        border-radius: 5px;
     }
 
     .container_header {

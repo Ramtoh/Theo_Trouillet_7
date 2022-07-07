@@ -26,7 +26,7 @@ class postController {
             res.status(200).json({
                 status: true,
                 message: 'Tous les posts',
-                posts
+                posts,
             })
         } catch(e) {
             next(createError(e.statusCode, e.message))
